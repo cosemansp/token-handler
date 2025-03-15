@@ -9,6 +9,8 @@
     "ofetch",
     "oslojs",
     "oxlint",
-    "PKCE"
+    "PKCE",
+    "thconfig",
+    "tokener"
   ]
 }

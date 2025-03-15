@@ -1,0 +1,34 @@
+{
+  "name": "@euricom/token-handler-cli",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "tokener": "./dist/cli.cjs"
+  },
+  "scripts": {
+    "dev": "tsx watch ./src/cli.ts --config thconfig.json",
+    "test": "vitest",
+    "build": "tsup ./src/cli.ts",
+    "lint": "oxlint",
+    "lint:types": "tsc --noEmit",
+    "lint:fix": "oxlint --fix"
+  },
+  "dependencies": {
+    "@euricom/hono-token-handler": "workspace:*",
+    "@hono/node-server": "^1.13.8",
+    "commander": "^13.1.0",
+    "debug": "^4.4.0",
+    "hono": "^4.6.20",
+    "hono-sessions": "^0.7.1",
+    "ofetch": "^1.4.1",
+    "tiny-invariant": "^1.3.3",
+    "tsx": "^4.19.3",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.12",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "tsup": "^8.4.0",
+    "vitest": "^3.0.7"
+  }
+}

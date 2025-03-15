@@ -158,12 +158,12 @@ export class OAuth2Strategy {
   }
 
   protected async getUser(ctx: Context<HonoOptions>, tokens: OAuth2Tokens): Promise<User> {
-    const payload = jwt.decode(tokens.idToken) as { oid: string; name: string; email: string; eRoles: string };
+    const payload = jwt.decode(tokens.idToken) as { oid: string; name: string; email: string; roles_euri: string };
     return {
       oid: payload.oid,
       name: payload.name,
       email: payload.email,
-      roles: (payload.eRoles || '').split(',').map((role) => role.trim()),
+      roles: (payload.roles_euri || '').split(',').map((role) => role.trim()),
     };
   }
 

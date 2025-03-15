@@ -12,4 +12,5 @@ dist
 .env.production
 .env.test
 *.local.*
+thconfig.json
 
