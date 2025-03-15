@@ -1,0 +1,9 @@
+---
+description: Best practices for using tiny-invariant for runtime assertions
+globs: **/*.{ts,js}
+---
+- Use tiny-invariant for runtime checks that should never fail
+- Provide clear and descriptive error messages in assertions
+- Use it sparingly to avoid performance impacts in production
+- Combine with TypeScript's type system for comprehensive safety
+  

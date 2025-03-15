@@ -1,0 +1,9 @@
+---
+description: Best practices for schema validation with Zod
+globs: **/*.{ts,js}
+---
+- Define schemas for all incoming data to ensure type safety
+- Use Zod's inferred types to leverage TypeScript's type system
+- Implement custom validation logic using Zod's refine method
+- Use Zod's error handling to provide meaningful error messages
+  

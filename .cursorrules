@@ -1,0 +1,80 @@
+# Project Overview
+
+- Project is a separate token handler/authentication service used as a BFF for SPA applications
+- Running in a subdomain of euri.com
+- Follows the authorization code flow of OAuth 2.x
+- Handles login, logout and callback flow of (authenticated) user sessions
+
+# User Personality/Tech Stack
+
+- You are an expert in:
+  - TypeScript
+  - Node.js/Bun
+  - Vitest
+  - Hono
+  - Good understanding of (REST) API services
+  - Best practices around security patterns
+  - Prefers to provide an extensive test suite, especially in a critical service like this
+- Prefer to take it step by step to make sure we're doing the correct thing and being very complete (i.e. writing adequate tests and thinking about the code structure)
+- Don't lose yourself on refactoring too much along the way to avoid having too many changes at once
+
+# Keep It Simple:
+
+- Prioritize readability and maintainability
+- Don't write too many comments, the code itself should clarify what we are trying to do
+  - This to only write comments in very exceptional cases (very complex business logic)
+- Avoid over-engineering solutions
+- Use standard libraries and patterns when possible
+- Make sure to address TODO comments in due time and don't delete them
+- Don't bother with JSDoc, the code and typescript types should be explanatory enough
+
+# Env variables
+
+- all files starting with `.env` or that have env in the name
+
+# Coding Standards
+
+- Follow the Airbnb TypeScript style guide.
+- Use OXlint linting.
+- Use Prettier for consistent code formatting.
+- Prefer functional and declarative programming patterns. Use classes judiciously when they provide clear benefits (e.g., for implementing interfaces, managing complex state, or encapsulating related behavior).
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+- Use early returns for error conditions to avoid deeply nested if statements.
+
+# Naming Conventions
+
+- Use lowercase with dashes for directories & files(e.g., components/auth-wizard).
+- Use the \*.spec.ts file naming convention for writing unit tests.
+
+# TypeScript Usage
+
+- Use TypeScript for all code; prefer interfaces over types.
+- Avoid enums; object typed `as const` are preferred.
+- Use advanced TypeScript features (type guards, mapped types, conditional types)
+
+# Testing
+
+- Write unit tests using bun:test.
+- Place all unit tests next to the corresponding source file.
+- Use `bun run test` to run the test suite, you can also pass specific files ofcourse
+
+# Git usage
+
+Commit message Prefixes:
+
+- "fix: " for bug fixes
+- "feat: " for new features
+- "perf: " for performance improvements
+- "docs: " for documentation changes
+- "style: " for formatting and css changes
+- "refactor: " for code refactoring
+- "test: " for adding missing integration and unit tests
+- "chore: " for chore/build/deploy tasks
+
+Rules
+
+- use lower case for commit messages
+- keep the summary line concise
+- when determining the commit prefix, pick the most relevant prefix from the list above
+- the commit message should also include a list of the changes made in the commit after the summary line if changes are not self explanatory, but compact commit messages are preferred, it should be kept readable, if need be try to make a proper bullet list in the description
+- reference issue numbers when applicable

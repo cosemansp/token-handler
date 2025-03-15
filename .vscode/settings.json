@@ -1,0 +1,14 @@
+{
+  "biome.enabled": false,
+  "oxc.enable": true,
+  "cSpell.words": [
+    "appconfig",
+    "Entra",
+    "euri",
+    "euricom",
+    "ofetch",
+    "oslojs",
+    "oxlint",
+    "PKCE"
+  ]
+}

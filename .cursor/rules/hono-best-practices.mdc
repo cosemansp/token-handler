@@ -1,0 +1,15 @@
+---
+description: Best practices for using Hono web framework
+globs: **/*.{ts,js}
+---
+# hono
+- Use Hono's built-in middleware for common tasks like CORS and compression
+- Leverage Hono's routing capabilities for clean and maintainable routes
+- Utilize Hono's context object for request/response handling and data passing
+- Implement error handling using Hono's error handling middleware
+
+# hono-sessions
+- Use secure cookies for session storage in production
+- Implement proper session expiration and renewal mechanisms
+- Store only necessary data in sessions to minimize overhead
+- Use Hono Sessions' built-in methods for session management

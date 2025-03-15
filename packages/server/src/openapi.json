@@ -1,0 +1,836 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Euricom Token Handler API",
+    "version": "0.0.0"
+  },
+  "tags": [
+    {
+      "name": "Applications"
+    },
+    {
+      "name": "Client Secrets"
+    }
+  ],
+  "paths": {
+    "/api/applications": {
+      "get": {
+        "operationId": "Applications_list",
+        "description": "List all applications",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Application"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Applications"
+        ]
+      },
+      "post": {
+        "operationId": "Applications_create",
+        "description": "create an new application",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Application"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Applications"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationCreate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/applications/{id}": {
+      "get": {
+        "operationId": "Applications_get",
+        "description": "Get an application by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Application"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Applications"
+        ]
+      },
+      "put": {
+        "operationId": "Applications_update",
+        "description": "Update an application",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Application"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Applications"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationCreateOrUpdate"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Applications_delete",
+        "description": "removed an application",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Application"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Applications"
+        ]
+      }
+    },
+    "/api/applications/{id}/secrets": {
+      "get": {
+        "operationId": "Secrets_list",
+        "description": "List all client secrets for an application, secrets are masked",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientSecret"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Client Secrets"
+        ]
+      },
+      "post": {
+        "operationId": "Secrets_create",
+        "description": "Create a new client secret for an application, returns the full secret value once",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientSecret"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Client Secrets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientSecretCreate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/applications/{id}/secrets/{secretId}": {
+      "delete": {
+        "operationId": "Secrets_delete",
+        "description": "Delete a client secret for an application",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "secretId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientSecret"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Client Secrets"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "OAuth2Auth": []
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Application": {
+        "type": "object",
+        "required": [
+          "id",
+          "displayName",
+          "roles",
+          "slug",
+          "createdOn",
+          "updatedOn",
+          "config"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Object ID"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Name of the application to display in the UI"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The roles that are available for this application"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the application"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Shortcut to be used in role assignment `tsz:admin`"
+          },
+          "createdOn": {
+            "type": "string",
+            "description": "The date & time the application was created"
+          },
+          "updatedOn": {
+            "type": "string",
+            "description": "The date & time the application last updated"
+          },
+          "config": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationConfig"
+            },
+            "description": "The configuration of the application, used by the TokenHandler"
+          }
+        }
+      },
+      "ApplicationConfig": {
+        "type": "object",
+        "required": [
+          "displayName",
+          "clientId",
+          "scopes",
+          "domain",
+          "redirectUrl"
+        ],
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "Friendly name of the application config, eg; 'dev'"
+          },
+          "clientId": {
+            "type": "string",
+            "description": "Client ID of the application"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Scopes of the application; openid, profile, email, offline_access, ..."
+          },
+          "domain": {
+            "type": "string",
+            "description": "The DNS on which the application is hosted"
+          },
+          "redirectUrl": {
+            "type": "string",
+            "description": "The redirect URL of the application"
+          },
+          "backendUrl": {
+            "type": "string",
+            "description": "The backend URL of the application"
+          }
+        }
+      },
+      "ApplicationCreate": {
+        "type": "object",
+        "required": [
+          "displayName",
+          "roles",
+          "slug",
+          "config"
+        ],
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "Name of the application to display in the UI"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The roles that are available for this application"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the application"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Shortcut to be used in role assignment `tsz:admin`"
+          },
+          "config": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationConfig"
+            },
+            "description": "The configuration of the application, used by the TokenHandler"
+          }
+        }
+      },
+      "ApplicationCreateOrUpdate": {
+        "type": "object",
+        "required": [
+          "displayName",
+          "roles",
+          "slug",
+          "config"
+        ],
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "Name of the application to display in the UI"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The roles that are available for this application"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the application"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Shortcut to be used in role assignment `tsz:admin`"
+          },
+          "config": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationConfig"
+            },
+            "description": "The configuration of the application, used by the TokenHandler"
+          }
+        }
+      },
+      "BadRequestError": {
+        "type": "object",
+        "required": [
+          "status",
+          "title",
+          "errors"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          }
+        }
+      },
+      "ClientSecret": {
+        "type": "object",
+        "required": [
+          "id",
+          "description",
+          "value",
+          "expiresAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "description": "The secret name"
+          },
+          "value": {
+            "type": "string",
+            "description": "The secret value, masked when read"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date",
+            "description": "The date & time the secret is expiring"
+          }
+        }
+      },
+      "ClientSecretCreate": {
+        "type": "object",
+        "required": [
+          "description",
+          "value"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "The secret name"
+          },
+          "value": {
+            "type": "string",
+            "description": "The secret value, masked when read"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "status",
+          "title"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorDetail": {
+        "type": "object",
+        "required": [
+          "key",
+          "message"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "NotAuthorizedError": {
+        "type": "object",
+        "required": [
+          "status",
+          "title"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "NotFoundError": {
+        "type": "object",
+        "required": [
+          "status",
+          "title"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "OAuth2Auth": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://login.microsoftonline.com/0b53d2c1-bc55-4ab3-a161-927d289257f2/oauth2/v2.0/authorize",
+            "tokenUrl": "https://login.microsoftonline.com/0b53d2c1-bc55-4ab3-a161-927d289257f2/oauth2/v2.0/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local",
+      "variables": {}
+    }
+  ]
+}

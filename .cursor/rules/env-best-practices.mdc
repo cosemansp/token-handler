@@ -1,0 +1,8 @@
+---
+description: Best practices for environment variable management 
+globs: **/*.{ts,js}
+---
+- Define all required environment variables in your Zod schema in `env.ts` file.
+- Use type-safe environment variables throughout your application
+- Implement proper error handling for missing or invalid environment variables
+- Keep sensitive environment variables out of version control

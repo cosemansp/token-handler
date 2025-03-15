@@ -1,0 +1,15 @@
+.DS_STORE
+
+# deps
+node_modules/
+
+# dist
+dist
+
+# environment
+.env
+.env.development
+.env.production
+.env.test
+*.local.*
+

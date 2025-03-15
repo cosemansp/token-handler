@@ -1,0 +1,17 @@
+{
+  "name": "euricom-token-handler",
+  "version": "1.0.0",
+  "devDependencies": {
+    "oxlint": "^0.15.10",
+    "prettier": "^3.5.0",
+    "typescript": "^5.7.3"
+  },
+  "scripts": {
+    "lint": "bun --filter '*' lint",
+    "format": "prettier --write .",
+    "start": "cd packages/server && bun run ./src/index.ts",
+    "dev": "cd packages/server && bun run --hot ./src/index.ts"
+  },
+  "dependencies": {},
+  "packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b"
+}
