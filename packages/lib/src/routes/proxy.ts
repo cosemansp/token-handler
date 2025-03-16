@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Context, Hono, HonoRequest, Next } from 'hono';
 import { proxy } from 'hono/proxy';
 import micromatch from 'micromatch';
 import { HonoOptions } from '../context';
@@ -9,6 +9,9 @@ export type ProxyMiddlewareOptions = {
 
   // Filter paths to proxy
   pathFilter?: string | string[];
+
+  // Middleware to apply to the proxy request
+  middleware?: (orgUrl: string, ctx: Request, next: any) => Promise<void>;
 };
 
 export const isGlobMatch = (pattern: string, path: string): boolean => {
@@ -37,22 +40,36 @@ export const proxyRouter = (options: ProxyMiddlewareOptions) => {
       }
     }
 
-    // update url to proxy
-    const proxyUrl = new URL(options.target);
-    url.protocol = proxyUrl.protocol;
-    url.host = proxyUrl.host;
-    const headers = new Headers(ctx.req.header());
-
-    // remove cookie and add auth headers
-    const tokens = ctx.var.session.get('tokens');
-    headers.delete('cookie');
-    headers.set('Authorization', `Bearer ${tokens?.accessToken}`);
-
     try {
-      return await proxy(url, {
+      // update url to proxy
+      const newUrl = new URL(ctx.req.url);
+      const proxyUrl = new URL(options.target);
+      newUrl.protocol = proxyUrl.protocol;
+      newUrl.host = proxyUrl.host;
+      const headers = new Headers(ctx.req.header());
+
+      // remove cookie and add auth headers
+      const tokens = ctx.var.session.get('tokens');
+      headers.delete('cookie');
+      headers.set('Authorization', `Bearer ${tokens?.accessToken}`);
+
+      // construct new request
+      const req = {
         ...ctx.req,
         headers,
-      });
+        url: newUrl.toString(),
+      } as any;
+
+      // apply middleware (if any)
+      if (options.middleware) {
+        const next = () => {
+          return proxy(newUrl, req);
+        };
+        return await options.middleware(url.toString(), req, next);
+      }
+
+      // no middleware, just proxy
+      return await proxy(newUrl, req);
     } catch (error) {
       // handle proxy errors, throw 502 error
       if (error instanceof Error) {

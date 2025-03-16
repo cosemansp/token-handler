@@ -71,7 +71,10 @@ const createServer = (options: ServerOptions) => {
       '/api/*',
       proxyRouter({
         target: options.proxy,
-        // pathFilter: '/api/**',
+        middleware(orgUrl, req, next) {
+          console.log(`Proxy ${orgUrl} > ${req.url}`);
+          return next();
+        },
       }),
     );
   }
