@@ -1,8 +1,8 @@
-import { sessionMiddleware } from 'hono-sessions';
+import { MemoryStore, sessionMiddleware } from 'hono-sessions';
 import { env } from '@/env';
-import SessionStore from '@/utils/sessionStore';
+// import SessionStore from '@/utils/sessionStore';
 
-const sessionStore = new SessionStore();
+const sessionStore = new MemoryStore();
 
 export default sessionMiddleware({
   store: sessionStore,

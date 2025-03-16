@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { logger } from 'hono/logger';
 import { serveStatic } from 'hono/serve-static';
 import errorHandler from './middleware/errorHandler';
-import tokenHandlerRoutes from './routes/tokenHandler';
+import authRoutes from './routes/auth';
 import sessionMiddleware from './middleware/session';
 import proxyRoutes from './routes/proxy';
 import healthRoutes from './routes/health';
@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'development') {
 // Routes
 //
 
-app.route('/auth', tokenHandlerRoutes);
+app.route('/auth', authRoutes);
 app.route('/openapi', openApiRoutes);
 app.route('/api/applications', applicationsRoutes);
 app.route('/api/health', healthRoutes);

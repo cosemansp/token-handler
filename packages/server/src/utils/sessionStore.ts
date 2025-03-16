@@ -1,6 +1,5 @@
 import { Store, SessionData } from 'hono-sessions';
 import Keyv from 'keyv';
-import KeyvSqlite from '@keyv/sqlite';
 import KeyvMongo from '@keyv/mongo';
 import { getLogger } from '@/logger';
 import { LRUCache } from 'lru-cache';
@@ -31,16 +30,16 @@ class SessionStore implements Store {
       this.keyv = new Keyv({ store, ttl: 5000, namespace: 'cache' });
       log.info('Using Mongo store');
     }
-    // sqlite store (sqlite://sessionStore.sqlite)
-    else if (storeUrl.includes('sqlite')) {
-      this.keyv = new Keyv({
-        store: new KeyvSqlite(storeUrl),
-        ttl: 5000,
-        namespace: 'cache',
-      });
-      log.info('Using SQLite store');
-      return;
-    }
+    // // sqlite store (sqlite://sessionStore.sqlite)
+    // else if (storeUrl.includes('sqlite')) {
+    //   this.keyv = new Keyv({
+    //     store: new KeyvSqlite(storeUrl),
+    //     ttl: 5000,
+    //     namespace: 'cache',
+    //   });
+    //   log.info('Using SQLite store');
+    //   return;
+    // }
     // memory store
     else {
       this.keyv = new Keyv();

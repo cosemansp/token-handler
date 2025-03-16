@@ -4,7 +4,7 @@ import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { serveStatic } from 'hono/serve-static';
 import { Session, sessionMiddleware } from 'hono-sessions';
-import { AzureStrategy, decodeToken, CookieStoreEx, proxyRouter } from '@euricom/hono-token-handler';
+import { AzureStrategy, decodeToken, CookieStoreEx, proxy } from '@euricom/hono-token-handler';
 
 export type ServerOptions = {
   tenantId: string;
@@ -67,9 +67,9 @@ const createServer = (options: ServerOptions) => {
   );
 
   if (options.proxy) {
-    app.route(
+    app.use(
       '/api/*',
-      proxyRouter({
+      proxy({
         target: options.proxy,
         middleware(orgUrl, req, next) {
           console.log(`Proxy ${orgUrl} > ${req.url}`);

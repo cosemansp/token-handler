@@ -1,11 +1,11 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { Hono } from 'hono';
 import { ofetch } from 'ofetch';
-import * as tokenFixture from './helpers/tokenFixture';
+import * as tokenFixture from '../../tests/helpers/tokenFixture';
 import { sessionMiddleware } from 'hono-sessions';
-import { MemoryStore } from './helpers/memoryStore';
-import { AzureStrategy } from '../src';
-import { HonoOptions } from '../src/types';
+import { MemoryStore } from '../../tests/helpers/memoryStore';
+import { AzureStrategy } from './providers/azure';
+import { HonoOptions } from '../types';
 
 vi.mock('ofetch');
 

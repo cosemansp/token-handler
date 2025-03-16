@@ -170,6 +170,9 @@ importers:
       '@euricom/hono-token-handler':
         specifier: workspace:*
         version: link:../lib
+      '@hono/node-server':
+        specifier: ^1.13.8
+        version: 1.13.8(hono@4.7.4)
       '@hono/zod-validator':
         specifier: ^0.4.3
         version: 0.4.3(hono@4.7.4)(zod@3.24.2)

@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { isGlobMatch, proxyRouter } from './proxy';
+import { isGlobMatch, proxy } from './proxyMiddleware';
 import { Hono } from 'hono';
 import { HonoOptions } from '../types';
 import { sessionMiddleware } from 'hono-sessions';
 import { MemoryStore } from '../../tests/helpers/memoryStore';
-import { proxy } from 'hono/proxy';
+import { proxy as honoProxy } from 'hono/proxy';
 
 vi.mock('hono/proxy');
 
@@ -44,13 +44,13 @@ describe('proxy', () => {
           store,
         }),
       );
-      app.route(
+      app.use(
         '/api/*',
-        proxyRouter({
+        proxy({
           target: 'https://sample.com/api',
         }),
       );
-      vi.mocked(proxy).mockImplementation((url, req) => {
+      vi.mocked(honoProxy).mockImplementation((url, req) => {
         expect(url.toString()).toBe('https://sample.com/api/users');
         expect(req?.headers.get('Authorization')).toBe(null);
         return new Response('ok') as any;
@@ -60,7 +60,7 @@ describe('proxy', () => {
     it('should proxy requests to the target', async () => {
       const response = await app.request('/api/users');
       expect(response.status).toBe(200);
-      expect(vi.mocked(proxy)).toHaveBeenCalled();
+      expect(vi.mocked(honoProxy)).toHaveBeenCalled();
     });
   });
 });

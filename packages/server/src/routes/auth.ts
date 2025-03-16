@@ -1,9 +1,13 @@
-import { ProviderFactory } from '@/utils/providerFactory';
+import { ApplicationConfig, ProviderFactory } from '@/utils/providerFactory';
 import { authErrorHandler, decodeToken, SessionData } from '@euricom/hono-token-handler';
 import { Hono } from 'hono';
 import { Session } from 'hono-sessions';
+import { env } from '../env';
 
 type AuthSession = Session<SessionData>;
+
+const appsConfig = env.CONFIG_STORE as ApplicationConfig[];
+console.log('appsConfig >>>>>', appsConfig);
 
 const router = new Hono<{
   Variables: {
@@ -11,15 +15,15 @@ const router = new Hono<{
   };
 }>();
 
-const factory = new ProviderFactory();
-
 router.get('/login', (ctx) => {
-  const authorizer = factory.createAuthorizer(ctx.req.header('host')!);
+  const factory = new ProviderFactory(appsConfig);
+  const authorizer = factory.createAuthorizer(ctx);
   return authorizer.authenticate(ctx);
 });
 
 router.get('/logout', (ctx) => {
-  const authorizer = factory.createAuthorizer(ctx.req.header('host')!);
+  const factory = new ProviderFactory(appsConfig);
+  const authorizer = factory.createAuthorizer(ctx);
   return authorizer.endSession(ctx);
 });
 
@@ -42,3 +46,5 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 router.onError(authErrorHandler);
+
+export default router;
