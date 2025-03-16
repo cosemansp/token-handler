@@ -42,7 +42,7 @@ const createServer = (options: ServerOptions) => {
   console.log('OAuth2:', oauthConfig);
   console.log('Proxy:', options.proxy);
   console.log('Port:', options.port);
-  const authorizer = new AzureStrategy(oauthConfig);
+  const authStrategy = new AzureStrategy(oauthConfig);
 
   app.use(logger());
 
@@ -96,11 +96,11 @@ const createServer = (options: ServerOptions) => {
   });
 
   app.get('/auth/login', (ctx) => {
-    return authorizer.authenticate(ctx);
+    return authStrategy.authenticate(ctx);
   });
 
   app.get('/auth/logout', (ctx) => {
-    return authorizer.endSession(ctx);
+    return authStrategy.endSession(ctx);
   });
 
   return app;

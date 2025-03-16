@@ -1,6 +1,6 @@
 import { OAuth2Strategy, OAuth2StrategyOptions } from '../strategy';
 
-type AzureStrategyOptions = Omit<
+export type AzureStrategyOptions = Omit<
   OAuth2StrategyOptions,
   | 'authorizationEndpoint'
   | 'tokenEndpoint'

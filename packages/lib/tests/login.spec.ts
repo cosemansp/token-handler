@@ -1,38 +1,41 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { Hono } from 'hono';
-import { tokenHandler } from '../src/routes/tokenHandler';
 import { ofetch } from 'ofetch';
 import * as tokenFixture from './helpers/tokenFixture';
 import { sessionMiddleware } from 'hono-sessions';
-import { MockMemoryStore } from './helpers/mockMemoryStore';
+import { MemoryStore } from './helpers/memoryStore';
+import { AzureStrategy } from '../src';
+import { HonoOptions } from '../src/types';
 
 vi.mock('ofetch');
 
 describe('login', async () => {
-  let app: Hono;
-  let provider: any;
-  let store: MockMemoryStore;
+  let app: Hono<HonoOptions>;
+  let autoConfig: any;
+  let store: MemoryStore;
   beforeEach(() => {
-    app = new Hono();
-    store = new MockMemoryStore();
-    app.use(
-      sessionMiddleware({
-        store: store,
-      }),
-    );
-    provider = {
+    autoConfig = {
       name: 'azure',
+      tenantId: '10000000-0000-0000-0000-000000000000',
       clientId: 'abc',
       clientSecret: '1234567890',
       redirectURI: 'http://localhost:3000/auth/login',
       scopes: ['api://1234567890/test'],
     };
-    app.route(
-      '/auth',
-      tokenHandler({
-        applications: [{ domain: 'localhost:3000', provider }],
+    app = new Hono();
+    store = new MemoryStore();
+    app.use(
+      sessionMiddleware({
+        store: store,
       }),
     );
+    const authStrategy = new AzureStrategy(autoConfig);
+    app.get('/auth/login', (ctx) => {
+      return authStrategy.authenticate(ctx);
+    });
+    app.get('/auth/logout', (ctx) => {
+      return authStrategy.endSession(ctx);
+    });
   });
 
   test('login - redirect to STS', async () => {
@@ -47,13 +50,13 @@ describe('login', async () => {
     // console.log(response.headers.get('location'));
     const state = location.searchParams.get('state');
     expect(`${location.origin}${location.pathname}`).toBe(
-      'https://login.microsoftonline.com/0b53d2c1-bc55-4ab3-a161-927d289257f2/oauth2/v2.0/authorize',
+      `https://login.microsoftonline.com/${autoConfig.tenantId}/oauth2/v2.0/authorize`,
     );
-    expect(location.searchParams.get('client_id')).toBe(provider.clientId);
-    expect(location.searchParams.get('redirect_uri')).toBe(provider.redirectURI);
+    expect(location.searchParams.get('client_id')).toBe(autoConfig.clientId);
+    expect(location.searchParams.get('redirect_uri')).toBe(autoConfig.redirectURI);
     expect(state).toBeDefined();
     expect(location.searchParams.get('response_type')).toBe('code');
-    expect(location.searchParams.get('scope')).toBe(provider.scopes.join(' '));
+    expect(location.searchParams.get('scope')).toBe(autoConfig.scopes.join(' '));
     expect(location.searchParams.get('code_challenge')).toBeDefined();
     expect(location.searchParams.get('code_challenge_method')).toBe('S256');
     expect(cookie).toBeDefined();
@@ -89,18 +92,18 @@ describe('login', async () => {
     expect(response2.status).toBe(302);
     expect(response2.headers.get('location')).toBe('/');
     expect(ofetch).toHaveBeenCalledWith(
-      'https://login.microsoftonline.com/0b53d2c1-bc55-4ab3-a161-927d289257f2/oauth2/v2.0/token',
+      `https://login.microsoftonline.com/${autoConfig.tenantId}/oauth2/v2.0/token`,
       expect.anything(),
     );
-    const arg = (ofetch as any).mock.calls[0][1];
+    const arg = vi.mocked(ofetch).mock.calls[0][1] as any;
     const params = new URLSearchParams(arg.body);
     expect(arg.method).toBe('POST');
     expect(arg.headers['Content-Type']).toBe('application/x-www-form-urlencoded');
     expect(params.get('code')).toBe('9999999999');
     expect(params.get('grant_type')).toBe('authorization_code');
-    expect(params.get('client_secret')).toBe(provider.clientSecret);
-    expect(params.get('client_id')).toBe(provider.clientId);
-    expect(params.get('redirect_uri')).toBe(provider.redirectURI);
+    expect(params.get('client_secret')).toBe(autoConfig.clientSecret);
+    expect(params.get('client_id')).toBe(autoConfig.clientId);
+    expect(params.get('redirect_uri')).toBe(autoConfig.redirectURI);
 
     const session = store.getFirstSession();
     expect(session.tokens).toBeDefined();

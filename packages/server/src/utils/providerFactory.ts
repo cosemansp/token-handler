@@ -1,6 +1,6 @@
-import { AzureStrategy } from './providers/azure';
-import { OAuth2Strategy } from './strategy';
-import { Context, type Env } from 'hono';
+import { Env } from 'hono';
+import { Authorizer } from './authenticator';
+import { AzureStrategy } from '@euricom/hono-token-handler';
 
 export type ApplicationConfig = {
   domain: string;
@@ -35,21 +35,5 @@ export class ProviderFactory<TEnv extends Env = any> {
       });
     }
     throw new Error('Provider not supported');
-  }
-}
-
-export class Authorizer<TEnv extends Env = any> {
-  constructor(protected providers: OAuth2Strategy[]) {
-    // currently only one provider is supported
-  }
-
-  public async authenticate(ctx: Context<TEnv>, _providerName?: string) {
-    const provider = this.providers[0];
-    return provider.authenticate(ctx as any);
-  }
-
-  public async endSession(ctx: Context<TEnv>, _providerName?: string) {
-    const provider = this.providers[0];
-    return provider.endSession(ctx as any);
   }
 }

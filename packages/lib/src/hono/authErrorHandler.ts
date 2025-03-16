@@ -1,8 +1,7 @@
 import { Context } from 'hono';
-import { HonoOptions } from '../context';
-// import { OAuth2RequestError } from 'arctic';
+import { HonoOptions } from '../types';
 
-export const errorHandler = (err: Error, ctx: Context<HonoOptions>) => {
+export const authErrorHandler = (err: Error, ctx: Context<HonoOptions>) => {
   console.log('>>>>', err);
   // if (err instanceof OAuth2RequestError) {
   //   const referer = ctx.req.header('referer');

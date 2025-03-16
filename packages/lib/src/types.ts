@@ -9,15 +9,20 @@ export interface User {
 }
 
 export interface SessionData {
-  state?: string;
-  codeVerifier?: string;
   tokens?: OAuth2Tokens;
   user?: User;
   providerName?: string;
 }
 
-export interface HonoOptions {
-  Variables: {
-    session: Session<SessionData>;
-  };
+export interface InternalSessionData extends SessionData {
+  state?: string;
+  codeVerifier?: string;
 }
+
+export { OAuth2Tokens };
+
+export type HonoOptions = {
+  Variables: {
+    session: Session<InternalSessionData>;
+  };
+};

@@ -1,7 +1,7 @@
-import { Context, Hono, HonoRequest, Next } from 'hono';
+import { Hono } from 'hono';
 import { proxy } from 'hono/proxy';
 import micromatch from 'micromatch';
-import { HonoOptions } from '../context';
+import { HonoOptions } from '../types';
 
 export type ProxyMiddlewareOptions = {
   // Target URL to proxy to
@@ -50,9 +50,12 @@ export const proxyRouter = (options: ProxyMiddlewareOptions) => {
 
       // remove cookie and add auth headers
       const tokens = ctx.var.session.get('tokens');
-      headers.delete('cookie');
-      headers.set('Authorization', `Bearer ${tokens?.accessToken}`);
 
+      console.log('tokens', tokens);
+      headers.delete('cookie');
+      if (tokens?.accessToken) {
+        headers.set('Authorization', `Bearer ${tokens?.accessToken}`);
+      }
       // construct new request
       const req = {
         ...ctx.req,

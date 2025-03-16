@@ -1,6 +1,6 @@
 import createDebug from 'debug';
 import { Context, HonoRequest } from 'hono';
-import { HonoOptions, User } from '../context';
+import { HonoOptions, User } from '../types';
 import jwt from 'jsonwebtoken';
 import { generateState, generateCodeVerifier } from './generator';
 import { CodeChallengeMethod, OAuth2Client } from './client';

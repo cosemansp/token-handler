@@ -2,7 +2,7 @@ import { Context } from 'hono';
 import { CookieStore, SessionData } from 'hono-sessions';
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
 import { CookieOptions } from 'hono/utils/cookie';
-import { decrypt, encrypt } from './crypto';
+import { decrypt, encrypt } from '../utils/crypto';
 
 interface CookieStoreOptions {
   encryptionKey?: string | null;
