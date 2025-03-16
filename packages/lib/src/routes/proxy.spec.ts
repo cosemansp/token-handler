@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { isGlobMatch } from './proxy';
 
+/**
+ * /api/users -> matches /api/users & /api/users/1
+ * /api/* -> matches /api/users & /api/users/1
+ * /api/users/** -> matches /api/users/1/posts
+ * /static/*.jpg -> matches /static/image.jpg
+ */
+
 describe('isGlobMatch', () => {
   it('should match exact paths', () => {
     expect(isGlobMatch('/api/users', '/api/users')).toBe(true);

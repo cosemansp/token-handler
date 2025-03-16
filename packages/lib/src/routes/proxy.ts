@@ -4,25 +4,13 @@ import micromatch from 'micromatch';
 import { HonoOptions } from '../context';
 
 export type ProxyMiddlewareOptions = {
+  // Target URL to proxy to
   target: string;
+
+  // Filter paths to proxy
   pathFilter?: string | string[];
-  // TODO: add plugins support
-  // plugins?: Array<{
-  //   onRequest?: (req: Request) => Promise<Request> | Request;
-  //   onResponse?: (res: Response) => Promise<Response> | Response;
-  // }>;
 };
 
-/** Matches paths using glob patterns.
- * @example
- * /api/users -> matches /api/users & /api/users/1
- * /api/* -> matches /api/users & /api/users/1
- * /api/users/** -> matches /api/users/1/posts
- * /static/*.jpg -> matches /static/image.jpg
- * @param pattern - The glob pattern to match against
- * @param path - The path to test
- * @returns boolean indicating if the path matches the pattern
- */
 export const isGlobMatch = (pattern: string, path: string): boolean => {
   if (!pattern.includes('*')) {
     return path.startsWith(pattern);
@@ -38,7 +26,7 @@ export const isGlobMatch = (pattern: string, path: string): boolean => {
  */
 export const proxyRouter = (options: ProxyMiddlewareOptions) => {
   const router = new Hono<HonoOptions>();
-  router.use('*', async (ctx, next) => {
+  router.use('/', async (ctx, next) => {
     const url = new URL(ctx.req.url);
 
     // apply filters

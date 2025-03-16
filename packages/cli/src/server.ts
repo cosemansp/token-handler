@@ -71,7 +71,7 @@ const createServer = (options: ServerOptions) => {
       '/api/*',
       proxyRouter({
         target: options.proxy,
-        pathFilter: '/api/**',
+        // pathFilter: '/api/**',
       }),
     );
   }
