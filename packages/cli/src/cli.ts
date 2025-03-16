@@ -13,6 +13,7 @@ type Options = {
   port: number;
   config: string;
   scopes: string;
+  proxy: string;
 };
 
 const program = new Command();
@@ -24,6 +25,7 @@ program
   .option('-i, --client <value>', 'Specify client id')
   .option('-p, --port <value>', 'Specify port')
   .option('-S, --scopes <value>', 'Specify scopes')
+  .option('--proxy <value>', 'Proxy URL')
   .option('-c, --config <value>', 'Config file')
   .showHelpAfterError()
   .parse(process.argv);
@@ -72,6 +74,10 @@ function getConfig(opts: Options): ServerOptions {
   }
   if (opts.scopes) {
     config.scopes = opts.scopes.split(',');
+  }
+
+  if (opts.proxy) {
+    config.proxy = opts.proxy;
   }
 
   if (!config.port) {

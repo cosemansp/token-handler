@@ -3,9 +3,8 @@ import { readFileSync } from 'node:fs';
 import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { serveStatic } from 'hono/serve-static';
-import { Session } from 'hono-sessions';
-import { sessionMiddleware } from 'hono-sessions';
-import { AzureStrategy, decodeToken, CookieStoreEx } from '@euricom/hono-token-handler';
+import { Session, sessionMiddleware } from 'hono-sessions';
+import { AzureStrategy, decodeToken, CookieStoreEx, proxyRouter } from '@euricom/hono-token-handler';
 
 export type ServerOptions = {
   tenantId: string;
@@ -13,6 +12,7 @@ export type ServerOptions = {
   clientId: string;
   scopes: string[];
   port: number;
+  proxy?: string;
 };
 
 export interface SessionData {
@@ -39,7 +39,9 @@ const createServer = (options: ServerOptions) => {
     redirectURI: `http://localhost:${options.port}/auth/login`,
     scopes: ['openid', 'email', 'profile', 'offline_access', ...options.scopes],
   };
-  console.log('OAuth config:', oauthConfig);
+  console.log('OAuth2:', oauthConfig);
+  console.log('Proxy:', options.proxy);
+  console.log('Port:', options.port);
   const authorizer = new AzureStrategy(oauthConfig);
 
   app.use(logger());
@@ -63,6 +65,16 @@ const createServer = (options: ServerOptions) => {
       },
     }),
   );
+
+  if (options.proxy) {
+    app.route(
+      '/api/*',
+      proxyRouter({
+        target: options.proxy,
+        pathFilter: '/api/**',
+      }),
+    );
+  }
 
   app.get('/auth/user', (ctx) => {
     const user = ctx.var.session.get('user');
