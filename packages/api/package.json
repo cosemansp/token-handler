@@ -1,0 +1,17 @@
+{
+  "name": "@euricom/token-handler-cli",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch ./src/server.ts",
+    "lint": "oxlint",
+    "lint:types": "tsc --noEmit",
+    "lint:fix": "oxlint --fix"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.8",
+    "hono": "^4.6.20",
+    "tsx": "^4.19.3"
+  },
+  "devDependencies": {}
+}
