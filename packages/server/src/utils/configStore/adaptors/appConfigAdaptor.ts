@@ -1,25 +1,21 @@
 import { AppConfigurationClient } from '@azure/app-configuration';
-import { env } from '@/env';
-import { CachedClientSecretCredential } from '../../cachedClientSecretCredential';
-import { StorageAdaptor } from '../storageAdaptor';
+import { type Adaptor } from './adaptor';
 import { TokenCredential } from '@azure/identity';
-import { RestError } from '@azure/core-rest-pipeline';
 
-export class AppConfigAdaptor implements StorageAdaptor {
+export class AppConfigAdaptor implements Adaptor {
   private readonly client: AppConfigurationClient;
 
   constructor(connectionString: string);
-  constructor(endpoint: string, tokenCredential: TokenCredential);
-  constructor(connectionStringOrEndpoint: string, tokenCredential?: TokenCredential) {
+  constructor(endpoint: string, credential: TokenCredential);
+  constructor(connectionStringOrEndpoint: string, credential?: TokenCredential) {
     if (connectionStringOrEndpoint.includes('Endpoint=')) {
       // using connection string
+      // console.log('connection string', connectionStringOrEndpoint, credential);
       this.client = new AppConfigurationClient(connectionStringOrEndpoint);
     } else {
       // using endpoint and token credential
-      const credentials =
-        tokenCredential ??
-        new CachedClientSecretCredential(env.AZURE_TENANT_ID, env.AZURE_CLIENT_ID, env.AZURE_CLIENT_SECRET);
-      this.client = new AppConfigurationClient(connectionStringOrEndpoint, credentials);
+      // console.log('endpoint', connectionStringOrEndpoint, credential);
+      this.client = new AppConfigurationClient(connectionStringOrEndpoint, credential!);
     }
   }
 
@@ -42,8 +38,9 @@ export class AppConfigAdaptor implements StorageAdaptor {
       return null; // no content
     } catch (err) {
       // throws error when the key doesn't exist
-      if (err instanceof RestError) {
-        if (err.statusCode === 404) {
+      if (err instanceof Error && err.name === 'RestError') {
+        const restError = err as any;
+        if (restError.statusCode === 404) {
           return null; // no content
         }
       }

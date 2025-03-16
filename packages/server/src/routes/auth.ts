@@ -1,28 +1,29 @@
-import { ApplicationConfig, ProviderFactory } from '@/utils/providerFactory';
+import { ProviderFactory } from '@/utils/providerFactory';
 import { authErrorHandler, decodeToken, SessionData } from '@euricom/hono-token-handler';
 import { Hono } from 'hono';
 import { Session } from 'hono-sessions';
-import { env } from '../env';
+import { ApplicationConfig } from '@/models/config';
+import { ConfigStore } from '@/utils/configStore/store';
 
 type AuthSession = Session<SessionData>;
-
-const appsConfig = env.CONFIG_STORE as ApplicationConfig[];
-console.log('appsConfig >>>>>', appsConfig);
 
 const router = new Hono<{
   Variables: {
     session: AuthSession;
+    config: ConfigStore<ApplicationConfig[]>;
   };
 }>();
 
-router.get('/login', (ctx) => {
-  const factory = new ProviderFactory(appsConfig);
+router.get('/login', async (ctx) => {
+  const config = await ctx.var.config.load();
+  const factory = new ProviderFactory(config);
   const authorizer = factory.createAuthorizer(ctx);
   return authorizer.authenticate(ctx);
 });
 
-router.get('/logout', (ctx) => {
-  const factory = new ProviderFactory(appsConfig);
+router.get('/logout', async (ctx) => {
+  const config = await ctx.var.config.load();
+  const factory = new ProviderFactory(config);
   const authorizer = factory.createAuthorizer(ctx);
   return authorizer.endSession(ctx);
 });

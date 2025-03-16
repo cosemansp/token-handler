@@ -17,25 +17,10 @@ export const env = createEnv({
     AZURE_CLIENT_SECRET: z.string(),
     // Session
     SESSION_SECRET: z.string(),
-    SESSION_STORE: z.string().default('memory'), // redis:redis://localhost:6379, sqlite://session.sqlite
-    // Config Store
-    //   [ { domain: "...", provider: ...}]
-    //   https://ac-euri-tokens-we.azconfig.io/keyname
-    //   file://.storage.json
-    CONFIG_STORE: z.string().transform((str, ctx) => {
-      try {
-        if (str.startsWith('http')) {
-          return str;
-        }
-        return JSON.parse(str) as [];
-      } catch (e) {
-        if (e instanceof Error) {
-          ctx.addIssue({ code: 'custom', message: `Invalid JSON: ${e.message}` });
-          return z.NEVER;
-        }
-        throw e;
-      }
-    }),
+    SESSION_STORE: z.string().default('memory'),
+
+    CONFIG_STORE: z.string(),
+    CONFIG_STORE_NS: z.string(),
   },
   runtimeEnv: process.env,
 });

@@ -1,19 +1,7 @@
 import { Context, Env } from 'hono';
 import { Authorizer } from './authenticator';
 import { AzureStrategy } from '@euricom/hono-token-handler';
-
-export type ApplicationConfig = {
-  domain: string;
-  provider: ProviderConfig[] | ProviderConfig;
-};
-
-export type ProviderConfig = {
-  name: string;
-  clientId: string;
-  clientSecret: string;
-  redirectURI: string;
-  scopes: string[];
-};
+import { ApplicationConfig, ProviderConfig } from '@/models/config';
 
 export class ProviderFactory<TEnv extends Env = any> {
   constructor(protected apps: ApplicationConfig[]) {}

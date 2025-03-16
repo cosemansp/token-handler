@@ -1,7 +1,11 @@
-import { StorageAdaptor } from '../storageAdaptor';
+import { Adaptor } from './adaptor';
 
-export class MemoryAdaptor implements StorageAdaptor {
+export class MemoryAdaptor implements Adaptor {
   private storage: unknown = null;
+
+  constructor(data: unknown) {
+    this.storage = data;
+  }
 
   public async save<TData>(data: TData): Promise<void> {
     this.storage = data;

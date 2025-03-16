@@ -10,12 +10,28 @@ import proxyRoutes from './routes/proxy';
 import healthRoutes from './routes/health';
 import openApiRoutes from './routes/openApi';
 import applicationsRoutes from './routes/applications';
+import { ConfigStore } from './utils/configStore/store';
+import { env } from '@/env';
+import { ApplicationConfig } from './models/config';
+import { configMiddleware } from './middleware/appsConfig';
+import { getLogger } from './logger';
+
+const log = getLogger('server');
 
 const app = new Hono();
 
 //
+// preload the configuration
+//
+const configStore = new ConfigStore<ApplicationConfig>(env.CONFIG_STORE, env.CONFIG_STORE_NS);
+const config = await configStore.load();
+log.info({ config }, 'appsConfig');
+
+//
 // Middleware
 //
+
+app.use(configMiddleware(configStore));
 // app.use(poweredBy());
 if (process.env.NODE_ENV !== 'test') {
   app.use(logger());

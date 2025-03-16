@@ -1,109 +1,34 @@
-import { describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { describe, test, expect } from 'vitest';
 import { ConfigStore } from './store';
 import { FileAdaptor } from './adaptors/fileAdaptor';
-import { AppConfigAdaptor } from './adaptors/appConfigAdaptor';
-import { env } from '@/env';
-import { ClientSecretCredential } from '@azure/identity';
 import { MemoryAdaptor } from './adaptors/memoryAdaptor';
+import { AppConfigAdaptor } from './adaptors/appConfigAdaptor';
 
-describe.skip('ConfigStore', () => {
-  describe('Memory', () => {
-    let store: ConfigStore;
-
-    beforeEach(async () => {
-      store = new ConfigStore(new MemoryAdaptor());
-      await store.clear();
-    });
-
-    afterEach(async () => {});
-
-    test('should save and load data correctly', async () => {
-      const testData = { key: 'value', number: 42 };
-
-      await store.save(testData);
-      const loadedData = await store.load();
-
-      expect(loadedData).toEqual(testData);
-    });
-
-    test('should return null when no data is stored', async () => {
-      const loadedData = await store.load();
-
-      expect(loadedData).toBeNull();
-    });
+describe('ConfigStore', () => {
+  test('should create a file based store', () => {
+    const store = new ConfigStore('file://./test.json', 'abc');
+    expect(store.adaptor).toBeInstanceOf(FileAdaptor);
+    expect(store.nameSpace).toBe('abc');
   });
 
-  describe('File', () => {
-    let store: ConfigStore;
-
-    beforeEach(() => {
-      store = new ConfigStore(new FileAdaptor('file://.test.json'));
-    });
-
-    beforeEach(async () => {
-      await store.clear();
-    });
-
-    test('should save and load data correctly', async () => {
-      const testData = { key: 'value', number: 42 };
-
-      await store.save(testData);
-      const loadedData = await store.load();
-
-      expect(loadedData).toEqual(testData);
-    });
-
-    test('should return null when no data is stored', async () => {
-      const loadedData = await store.load();
-
-      expect(loadedData).toBeNull();
-    });
+  test('should create a memory based store', () => {
+    const store = new ConfigStore('memory://', 'ns');
+    expect(store.adaptor).toBeInstanceOf(MemoryAdaptor);
+    expect(store.nameSpace).toBe('ns');
   });
 
-  // config is skipped by default because it requires a valid
-  // Azure App Configuration endpoint and credentials
-  describe('Config', () => {
-    let store: ConfigStore;
+  test('should create a azure app config based store', () => {
+    const store = new ConfigStore('https://ac-euri-tokens-we.azconfig.io', 'test');
+    expect(store.adaptor).toBeInstanceOf(AppConfigAdaptor);
+    expect(store.nameSpace).toBe('test');
+  });
 
-    beforeEach(() => {
-      store = new ConfigStore(
-        new AppConfigAdaptor(
-          'https://ac-euri-tokens-we.azconfig.io',
-          'test',
-          new ClientSecretCredential(env.AZURE_TENANT_ID, env.AZURE_CLIENT_ID, env.AZURE_CLIENT_SECRET),
-        ),
-      );
-    });
+  test('should return saved data', async () => {
+    const store = new ConfigStore('memory://', 'ns');
+    await store.save({ test: 'test' });
+    expect(store.config).toEqual({ test: 'test' });
 
-    beforeEach(async () => {
-      await store.clear();
-    });
-
-    test('should save and load data correctly', async () => {
-      const testData = { key: 'value', number: 42 };
-
-      await store.save(testData);
-      const loadedData = await store.load();
-      expect(loadedData).toEqual(testData);
-    });
-
-    test('should return null when no data is stored', async () => {
-      const loadedData = await store.load();
-      expect(loadedData).toBeNull();
-    });
-
-    test('using alternative config adaptor setup', async () => {
-      store = new ConfigStore(
-        new AppConfigAdaptor(
-          'Endpoint=https://ac-euri-tokens-we.azconfig.io;Id=12Bk;Secret=4rsSwQrUKzteHszct9l4e4ENQOMYLqvYgN3Vvsp9YGBSuu4DnBk6JQQJ99BCACYeBjFWy122AAACAZAC309Y',
-          'test',
-        ),
-      );
-
-      const testData = { key: 'value', number: 42 };
-      await store.save(testData);
-      const loadedData = await store.load();
-      expect(loadedData).toEqual(testData);
-    });
+    const data = await store.load();
+    expect(data).toEqual({ test: 'test' });
   });
 });

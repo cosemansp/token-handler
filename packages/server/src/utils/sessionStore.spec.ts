@@ -1,10 +1,6 @@
-import { describe, test, expect, beforeEach, afterEach, beforeAll } from 'vitest';
+import { describe, test, expect, beforeEach, beforeAll } from 'vitest';
 import SessionStore from './sessionStore';
 import { env } from '@/env';
-// import { FileAdaptor } from './configStore/adaptors/fileAdaptor';
-// import { AppConfigAdaptor } from './configStore/adaptors/appConfigAdaptor';
-// import { ClientSecretCredential } from '@azure/identity';
-// import { MemoryAdaptor } from './configStore/adaptors/memoryAdaptor';
 
 describe('ConfigStore', () => {
   describe('Memory', () => {
